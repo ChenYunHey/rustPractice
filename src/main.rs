@@ -160,6 +160,40 @@ fn main() {
         true
     }
 
+    pub fn is_anagram(s: String, t: String) -> bool {
+        let s_chars:Vec<char> = s.chars().collect();
+        let t_chars:Vec<char> = t.chars().collect();
+        let mut s_map:HashMap<char,i32> = HashMap::new();
+        let mut t_map:HashMap<char,i32> = HashMap::new();
+        if s.len()!=t.len() {
+            return false
+        }
+        for s_char in s_chars {
+            if s_map.contains_key(&s_char) {
+                s_map.insert(s_char,s_map.get(&s_char).unwrap()+ 1);
+            }else {
+                s_map.insert(s_char,1);
+            }
+        }
+        for t_char in t_chars {
+            if t_map.contains_key(&t_char) {
+                t_map.insert(t_char,t_map.get(&t_char).unwrap()+1);
+            }else {
+                t_map.insert(t_char,1);
+            }
+        }
+        for key in s_map.keys() {
+            if s_map.get(key)!=t_map.get(key){
+                return false;
+            }
+        }
+        true
+    }
+
+    let s = String::from("abacd");
+    let t = String::from("acbaw");
+    let res = is_anagram(s,t);
+    println!("{}",res);
 
     let pattern = String::from("aba");
     let magaine = String::from("hello word nihao");
