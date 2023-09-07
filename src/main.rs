@@ -1,5 +1,5 @@
 use std::cmp::{max, min};
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 fn main() {
     pub fn is_subsequence(s: String, t: String) -> bool {
@@ -136,6 +136,59 @@ fn main() {
         }
         return false
     }
+    /*
+    问题是，split(" ")返回一个迭代器，该迭代器产生&str类型的元素，而您试图将这些&str元素收集到Vec<String>中，这是不允许的，因为Rust不能自动将&str转换为String。
+    */
+    pub fn word_pattern(pattern: String, s: String) -> bool {
+        let pattern_chars: Vec<char> = pattern.chars().collect();
+        let s_strings: Vec<&str> = s.split(" ").collect();
+        let mut map = HashMap::new();
+
+        if pattern_chars.len() != s_strings.len() {
+            return false; // 模式长度与字符串长度不匹配，返回false
+        }
+
+        for i in 0..pattern.len() {
+            let res = map.insert(pattern_chars[i], s_strings[i]);
+            if let Some(existing) = res {
+                if existing != s_strings[i] {
+                    return false; // 如果模式对应的值已存在且不相等，返回false
+                }
+            }
+        }
+
+        true
+    }
+
+
+    let pattern = String::from("aba");
+    let magaine = String::from("hello word nihao");
+    let res =  word_pattern(pattern,magaine);
+
+    println!("{}====",res);
+
+    let mut map = HashMap::new();
+
+    // 插入键值对，如果键已存在，则返回false
+    let result = map.insert("key1", "value1");
+    if let Some(_) = result {
+        println!("插入失败，键已存在");
+    } else {
+        println!("插入成功");
+    }
+
+    // 再次尝试插入相同的键值对，返回false
+    let result = map.insert("key1", "new_value");
+    if let Some(_) = result {
+        println!("插入失败，键已存在");
+    } else {
+        println!("插入成功");
+    }
+
+    let mut map = HashMap::new();
+    map.insert(1,"s");
+    map.insert(1,"k");
+    println!("{:?}++++++++++",map);
 
     let ransom_note = String::from("ase");
     let magazine = String::from("afsbfse");
