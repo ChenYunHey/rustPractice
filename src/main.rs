@@ -190,6 +190,64 @@ fn main() {
         true
     }
 
+    pub fn two_sums(mut nums: Vec<i32>,target: i32) ->Vec<i32>{
+        nums.sort();
+        let mut l = 0;
+        let mut r = nums.len() - 1;
+
+        while l < r {
+            if target<nums[l]+nums[r] {
+                l = l+1;
+            }
+            else if target>nums[l]+nums[r] {
+                r = r -1;
+            }
+            else {
+                break
+            }
+        }
+        vec![l as i32,r as i32]
+    }
+
+    pub fn two_sum_index(nums: Vec<i32> ,target :i32) -> Vec<i32> {
+        let mut map :HashMap<i32,i32> = HashMap::new();
+        for i in 0..nums.len() {
+            if map.contains_key(&(target - nums[i])) { return vec![*map.get(&(&target- nums[i])).unwrap(),i as i32]}
+            map.insert(nums[i],i as i32);
+        }
+        return vec![-1,-1]
+    }
+
+    pub fn is_happy(num: i32) -> bool {
+        let mut num = num;
+        while num/10 > 0 {
+            num = get_num_char(num);
+            if num==1 { return true }
+        }
+        false
+    }
+    pub fn get_num_char(num: i32) -> i32 {
+        let mut num = num;
+        let mut new_num = 0;
+        while num > 0 {
+            let yu = num % 10;
+            new_num = new_num + yu*yu;
+            num = num / 10;
+        }
+        return new_num;
+    }
+
+    let res = is_happy(18);
+    println!("{}-----",res);
+
+    let nums = vec![3,2,1,6];
+    let res = two_sum_index(nums,4);
+    println!("{:?}",res);
+
+    let nums = vec![1,2,3,4];
+    let res = two_sums(nums,9);
+    println!("{:?}",res);
+
     let s = String::from("abacd");
     let t = String::from("acbaw");
     let res = is_anagram(s,t);
