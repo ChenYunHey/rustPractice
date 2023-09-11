@@ -237,6 +237,110 @@ fn main() {
         return new_num;
     }
 
+    pub fn contains_nearby_duplicate(nums: Vec<i32>, k: i32) -> bool {
+        let mut map:HashMap<i32,i32> = HashMap::new();
+        for (i, &num) in nums.iter().enumerate() {
+            if let Some(pre_index) = map.insert(num,i as i32) {
+                if (i as i32 - pre_index) <= k {
+                    return true
+                }
+            }
+        }
+        false
+    }
+
+    pub fn longest_consecutive(mut nums: Vec<i32>) -> i32 {
+        nums.sort();
+        let mut vec_num:Vec<i32> = Vec::new();
+        for i in 0..nums.len() {
+            if vec_num.contains(&nums[i]) {
+                continue
+            }else {
+                vec_num.push(nums[i]);
+            }
+        }
+        let mut count = 1;
+        let mut max_len = 1;
+        for i in 1..vec_num.len() {
+            if vec_num[i]==vec_num[i-1] +1 {
+                count = count + 1;
+            }
+            else {
+                count = 0;
+            }
+            max_len = max(max_len,count);
+        }
+        max_len
+    }
+    //汇总区间
+    pub fn summary_ranges(nums: Vec<i32>) -> Vec<String> {
+        let mut nums_:Vec<i32> = Vec::new();
+        let mut str: Vec<String> = Vec::new();
+        let mut count = 0;
+        for i in 0..nums.len() {
+            nums_.push(nums[i] - i as i32);
+        }
+        for i in 0..nums_.len()-1 {
+            let mut start = 0;
+            let mut end = 0;
+            if nums_[i+1]==nums_[i] {
+                count = count + 1;
+            }else {
+                end = nums_[i] + i as i32;
+                start = end - count;
+                count = 0;
+                let res = format!("{}->{}",start,end);
+                str.push(res);
+            }
+
+        }
+        str
+    }
+    //合并区间
+    pub fn merge(intervals: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let mut inter:Vec<Vec<i32>> = Vec::new();
+        let mut intervals = intervals;
+        intervals.sort_by(|a,b| a[1].cmp(&b[1]));
+        println!("{:?}",intervals);
+        let mut new_vec= vec![intervals[0][0],intervals[0][1]];
+        for i in 1..intervals.len() {
+            if intervals[i][0]<=new_vec[1] {
+                new_vec = vec![min(new_vec[0],intervals[i][0]),intervals[i][1]];
+                if i==intervals.len()-1 {
+                    inter.push(new_vec.clone());
+                }
+            }else {
+                inter.push(new_vec.clone());
+                new_vec = vec![intervals[i][0],intervals[i][1]]
+            }
+        }
+        return inter
+    }
+
+    let intervals = vec![vec![1,2],vec![3,7],vec![4,5],vec![7,9]];
+    let res = merge(intervals);
+    println!("{:?}",res);
+
+    let mut nums = vec![vec![1, 2], vec![2, 5], vec![3, 4]];
+
+    nums.sort_by(|a, b| a[1].cmp(&b[1])); // 按第二个元素升序排序
+
+    for item in &nums {
+        println!("{:?}", item);
+    }
+
+    let nums = vec![1,2,3,5,6,9];
+    let res = summary_ranges(nums);
+    println!("{:?}",res);
+    
+    let nums = vec![1,2,3,4,7,8,9,5,6,100,101,7];
+    let res = longest_consecutive(nums);
+    println!("{}",res);
+
+    let nums = vec![1,2,3,1];
+    let res = contains_nearby_duplicate(nums,3);
+    println!("{}",res);
+
     let res = is_happy(18);
     println!("{}-----",res);
 
